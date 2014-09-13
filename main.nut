@@ -38,12 +38,12 @@ function MooveAI::Load(version, data)
 
 function MooveAI::SetCompanyName()
 {
-	if(!AICompany.SetName("Testing AI")) {
+	if(!AICompany.SetName("MooveAI")) {
 		local i = 2;
-		while(!AICompany.SetName("Testing AI #" + i)) {
+		while(!AICompany.SetName("MooveAI #" + i)) {
 			i = i + 1;
 			if(i > 255) break;
 		}
 	}
-	AICompany.SetPresidentName("P. Resident");
+	AICompany.SetPresidentName("M. Bovine");
 }
