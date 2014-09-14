@@ -1,4 +1,4 @@
-require("pathfinder/include.nut");
+require("pathfinding/include.nut");
 
 class MooveAI extends AIController
 {
@@ -38,7 +38,7 @@ function MooveAI::Start()
   AIRoad.SetCurrentRoadType(AIRoad.ROADTYPE_ROAD);
 
   /* Create an instance of the pathfinder. */
-  local pathfinder = Road();
+  local pathfinder = RoadPathfinder();
 
   /* Adjust costs */
   pathfinder.cost.tile = 100;
