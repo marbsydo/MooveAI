@@ -1,4 +1,4 @@
-/* $Id$ */
+/* Modified from: http://dev.openttdcoop.org/projects/lib-pathfinderroad/repository/entry/main.nut */
 
 /**
  * A Road Pathfinder.
@@ -21,6 +21,7 @@ class RoadPathfinder
   _cost_bridge_per_tile = null;  ///< The cost per tile of a new bridge, this is added to _cost_tile.
   _cost_tunnel_per_tile = null;  ///< The cost per tile of a new tunnel, this is added to _cost_tile.
   _cost_coast = null;            ///< The extra cost for a coast tile.
+  _cost_farm = null;             ///< The extra cost for a farm tile
   _pathfinder = null;            ///< A reference to the used AyStar object.
   _max_bridge_length = null;     ///< The maximum length of a bridge that will be build.
   _max_tunnel_length = null;     ///< The maximum length of a tunnel that will be build.
@@ -38,6 +39,7 @@ class RoadPathfinder
     this._cost_bridge_per_tile = 150;
     this._cost_tunnel_per_tile = 120;
     this._cost_coast = 20;
+    this._cost_farm = 20;
     this._max_bridge_length = 10;
     this._max_tunnel_length = 20;
     this._pathfinder = this._aystar_class(this, this._Cost, this._Estimate, this._Neighbours, this._CheckDirection);
@@ -92,6 +94,7 @@ class RoadPathfinder.Cost
       case "bridge_per_tile":   this._main._cost_bridge_per_tile = val; break;
       case "tunnel_per_tile":   this._main._cost_tunnel_per_tile = val; break;
       case "coast":             this._main._cost_coast = val; break;
+      case "farm":              this._main._cost_farm = val; break;
       case "max_bridge_length": this._main._max_bridge_length = val; break;
       case "max_tunnel_length": this._main._max_tunnel_length = val; break;
       default: throw("the index '" + idx + "' does not exist");
@@ -111,6 +114,7 @@ class RoadPathfinder.Cost
       case "bridge_per_tile":   return this._main._cost_bridge_per_tile;
       case "tunnel_per_tile":   return this._main._cost_tunnel_per_tile;
       case "coast":             return this._main._cost_coast;
+      case "farm":              return this._main._cost_farm;
       case "max_bridge_length": return this._main._max_bridge_length;
       case "max_tunnel_length": return this._main._max_tunnel_length;
       default: throw("the index '" + idx + "' does not exist");
@@ -193,6 +197,10 @@ function RoadPathfinder::_Cost(self, path, new_tile, new_direction)
   /* Check if the new tile is a coast tile. */
   if (AITile.IsCoastTile(new_tile)) {
     cost += self._cost_coast;
+  }
+
+  if (AITile.IsFarmTile(new_tile)) {
+    cost += self._cost_farm;
   }
 
   /* Check if the last tile was sloped. */

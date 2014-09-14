@@ -48,6 +48,7 @@ function MooveAI::Start()
   pathfinder.cost.bridge_per_tile = 500;
   pathfinder.cost.tunnel_per_tile = 300;
   pathfinder.cost.coast = 1000;
+  pathfinder.cost.farm = 250;
   pathfinder.cost.max_bridge_length = 10;
   pathfinder.cost.max_tunnel_length = 20;
 
