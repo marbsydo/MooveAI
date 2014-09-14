@@ -1,4 +1,4 @@
-/* Modified from: http://dev.openttdcoop.org/projects/lib-pathfinderrail/repository/changes/main.nut */
+/* Modified from: http://dev.openttdcoop.org/projects/lib-pathfinderrail/repository/entry/main.nut */
 
 /**
  * A Rail Pathfinder.
@@ -84,7 +84,7 @@ class RailPathfinder.Cost
 		switch (idx) {
 			case "max_cost":          this._main._max_cost = val; break;
 			case "tile":              this._main._cost_tile = val; break;
-			case "diagonal_tile":     this._cost_diagonal_tile = val; break;
+			case "diagonal_tile":     this._main._cost_diagonal_tile = val; break;
 			case "turn":              this._main._cost_turn = val; break;
 			case "slope":             this._main._cost_slope = val; break;
 			case "bridge_per_tile":   this._main._cost_bridge_per_tile = val; break;
@@ -103,7 +103,7 @@ class RailPathfinder.Cost
 		switch (idx) {
 			case "max_cost":          return this._main._max_cost;
 			case "tile":              return this._main._cost_tile;
-			case "diagonal_tile":     return this._cost_diagonal_tile;
+			case "diagonal_tile":     return this._main._cost_diagonal_tile;
 			case "turn":              return this._main._cost_turn;
 			case "slope":             return this._main._cost_slope;
 			case "bridge_per_tile":   return this._main._cost_bridge_per_tile;
