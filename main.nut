@@ -1,4 +1,4 @@
-import("pathfinder.road", "RoadPathFinder", 3);
+require("pathfinder.nut")
 
 class MooveAI extends AIController
 {
