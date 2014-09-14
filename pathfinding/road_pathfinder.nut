@@ -199,6 +199,7 @@ function RoadPathfinder::_Cost(self, path, new_tile, new_direction)
     cost += self._cost_coast;
   }
 
+  /* Check if the new tile is a farm tile. */
   if (AITile.IsFarmTile(new_tile)) {
     cost += self._cost_farm;
   }
