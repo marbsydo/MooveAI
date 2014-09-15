@@ -210,11 +210,40 @@ function RailPathfinder::_Cost(path, new_tile, new_direction, self)
 	 *  difference between the tile before the previous node and the node before
 	 *  that. */
 	local cost = self._cost_tile;
-	if (path.GetParent() != null && AIMap.DistanceManhattan(path.GetParent().GetTile(), prev_tile) == 1 && path.GetParent().GetTile() - prev_tile != prev_tile - new_tile) cost = self._cost_diagonal_tile;
-	if (path.GetParent() != null && path.GetParent().GetParent() != null &&
-			AIMap.DistanceManhattan(new_tile, path.GetParent().GetParent().GetTile()) == 3 &&
-			path.GetParent().GetParent().GetTile() - path.GetParent().GetTile() != prev_tile - new_tile) {
+
+	local is_turn = false;
+
+	local path_par;
+	local path_par_tile;
+	local path_par_par;
+	local path_par_par_tile;
+
+	path_par = path.GetParent();
+	if (path_par != null) {
+		path_par_tile = path_par.GetTile();
+		path_par_par = path_par.GetParent();
+
+		if (path_par_par != null) {
+			path_par_par_tile = path_par_par.GetTile();
+		}
+	}
+
+	/* Check for diagonals */
+	if (path_par != null && AIMap.DistanceManhattan(path_par_tile, prev_tile) == 1 && path_par_tile - prev_tile != prev_tile - new_tile) {
+		cost = self._cost_diagonal_tile;
+	}
+
+	/* Check for turns */
+	if (path_par != null && path_par_par != null &&
+			AIMap.DistanceManhattan(new_tile, path_par_par_tile) == 3 &&
+			path_par_par_tile - path_par_tile != prev_tile - new_tile) {
+		is_turn = true;
+	}
+
+	if (is_turn) {
 		cost += self._cost_turn;
+	} else {
+
 	}
 
 	/* Check if the new tile is a coast tile. */

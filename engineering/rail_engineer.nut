@@ -2,6 +2,11 @@ class RailEngineer
 {
 }
 
+function RailEngineer::BuildTerminalStationNearTown(town_id)
+{
+  
+}
+
 function RailEngineer::RailPathfinderTest()
 {
 
@@ -19,8 +24,8 @@ function RailEngineer::RailPathfinderTest()
   /* Print the names of the towns we'll try to connect. */
   AILog.Info("Going to connect " + AITown.GetName(townid_a) + " to " + AITown.GetName(townid_b));
 
-  local town_loc_a = AITown.GetLocation(townid_a) + AIMap.GetTileIndex(8, 8);
-  local town_loc_b = AITown.GetLocation(townid_b) + AIMap.GetTileIndex(8, 8);
+  local town_loc_a = AITown.GetLocation(townid_a);
+  local town_loc_b = AITown.GetLocation(townid_b);
 
   /* Set a legal railtype. */
   local types = AIRailTypeList();
@@ -40,8 +45,8 @@ function RailEngineer::RailPathfinderTest()
   pathfinder.cost.max_bridge_length = 10;
   pathfinder.cost.max_tunnel_length = 20;
 
-  /* Give the source and goal tiles to the pathfinder. */
-  pathfinder.InitializePath([[town_loc_a, town_loc_a + AIMap.GetTileIndex(1, 0)]], [[town_loc_b, town_loc_b + AIMap.GetTileIndex(1, 0)]]);
+  /* Give the source and goal tile edges to the pathfinder. */
+  pathfinder.InitializePath([[town_loc_a, town_loc_a + AIMap.GetTileIndex(1, 0)]], [[town_loc_b, town_loc_b + AIMap.GetTileIndex(-1, 0)]]);
 
   /* Try to find a path. */
   local path = false;
