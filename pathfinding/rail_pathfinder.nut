@@ -211,40 +211,66 @@ function RailPathfinder::_Cost(path, new_tile, new_direction, self)
 	 *  that. */
 	local cost = self._cost_tile;
 
+
+
 	local is_turn = false;
 
-	local path_par;
-	local path_par_tile;
-	local path_par_par;
-	local path_par_par_tile;
+	/* Initialise three arrays full of nulls: path_pars which stores the
+	 * previous path objects, path_par_tiles, which stores their
+	 * corresponding tiles, and path_par_is_turn, which stores whether that
+	 * particular tile is a turn or not. */
+	local par_history_len = 5;
+	local path_pars = [];
+	local path_par_tiles = [];
+	local path_par_is_turn = []; // 1 shorter than the rest
+	for (local i = 0; i < par_history_len; i++) {
+		path_pars.append(null);
+		path_par_tiles.append(null);
+	}
+	for (local i = 0; i < par_history_len - 1; i++) {
+		path_par_is_turn.append(false)
+	}
 
-	path_par = path.GetParent();
-	if (path_par != null) {
-		path_par_tile = path_par.GetTile();
-		path_par_par = path_par.GetParent();
-
-		if (path_par_par != null) {
-			path_par_par_tile = path_par_par.GetTile();
+	/* Fill path_pars with path parents. */
+	path_pars[0] = path.GetParent();
+	for (local i = 1; i < par_history_len; i++) {
+		if (path_pars[i - 1] != null) {
+			path_pars[i] = path_pars[i - 1].GetParent();
 		}
 	}
 
-	/* Check for diagonals */
-	if (path_par != null && AIMap.DistanceManhattan(path_par_tile, prev_tile) == 1 && path_par_tile - prev_tile != prev_tile - new_tile) {
+	/* Fill path_par_tiles with the corresponding tiles. */
+	for (local i = 0; i < par_history_len; i++) {
+		if (path_pars[i] != null) {
+			path_par_tiles[i] = path_pars[i].GetTile();
+		}
+	}
+
+	/* Check if the current path tile is a diagonal. */
+	if (path_pars[0] != null && AIMap.DistanceManhattan(path_par_tiles[0], prev_tile) == 1 && path_par_tiles[0] - prev_tile != prev_tile - new_tile) {
 		cost = self._cost_diagonal_tile;
 	}
 
-	/* Check for turns */
-	if (path_par != null && path_par_par != null &&
-			AIMap.DistanceManhattan(new_tile, path_par_par_tile) == 3 &&
-			path_par_par_tile - path_par_tile != prev_tile - new_tile) {
-		is_turn = true;
+	/* Create an array of turns */
+	for (local i = 0; i < path_par_is_turn.len(); i++) {
+		if (path_pars[i] != null && path_pars[i + 1] != null &&
+				AIMap.DistanceManhattan(new_tile, path_par_tiles[i + 1]) == 3 &&
+				path_par_tiles[i + 1] - path_par_tiles[i] != prev_tile - new_tile) {
+			//is_turn = true;
+			path_par_is_turn[i] = true;
+		}
 	}
 
-	if (is_turn) {
+	if (path_par_is_turn[0]) {
 		cost += self._cost_turn;
-	} else {
-
 	}
+
+	/*
+	if (path_par_is_turn[0] && path_par_is_turn[1]) {
+		AILog.Info("Too many turns!");
+		cost += self._max_cost;
+	}
+	*/
 
 	/* Check if the new tile is a coast tile. */
 	if (AITile.IsCoastTile(new_tile)) {
